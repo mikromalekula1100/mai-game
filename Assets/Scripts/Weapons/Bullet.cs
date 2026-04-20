@@ -3,9 +3,14 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody))]
 public class Bullet : MonoBehaviour
 {
+    [Header("Damage")]
     public int damage = 25;
     public float lifetime = 5f;
     public bool isPlayerBullet = true;
+
+    [Header("Audio")]
+    public AudioClip impactClip;
+    [Range(0f, 1f)] public float impactVolume = 0.7f;
 
     void Start()
     {
@@ -42,6 +47,18 @@ public class Bullet : MonoBehaviour
             BulletImpact.Instance.SpawnImpact(contact.point, contact.normal, isPlayerBullet);
         }
 
+        PlayImpactSound(collision);
         Destroy(gameObject);
+    }
+
+    void PlayImpactSound(Collision collision)
+    {
+        if (impactClip == null) return;
+
+        Vector3 position = collision.contactCount > 0
+            ? collision.GetContact(0).point
+            : transform.position;
+
+        AudioSource.PlayClipAtPoint(impactClip, position, impactVolume);
     }
 }

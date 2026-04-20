@@ -10,18 +10,23 @@ public class PlayerController : MonoBehaviour
 
     [Header("Mouse Look")]
     public float mouseSensitivity = 0.15f;
+    public float mouseInputDelayAfterLock = 0.1f;
 
     private CharacterController controller;
     private Transform cam;
     private float verticalVelocity;
     private float cameraPitch;
+    private float ignoreMouseUntilTime;
 
     void Start()
     {
         controller = GetComponent<CharacterController>();
         cam = GetComponentInChildren<Camera>().transform;
+        cameraPitch = 0f;
+        cam.localRotation = Quaternion.identity;
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+        ignoreMouseUntilTime = Time.unscaledTime + mouseInputDelayAfterLock;
     }
 
     private bool isPaused = false;
@@ -57,6 +62,7 @@ public class PlayerController : MonoBehaviour
         Time.timeScale = savedTimeScale;
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+        ignoreMouseUntilTime = Time.unscaledTime + mouseInputDelayAfterLock;
         SetEnemiesActive(true);
     }
 
@@ -103,6 +109,7 @@ public class PlayerController : MonoBehaviour
     {
         var mouse = Mouse.current;
         if (mouse == null) return;
+        if (Time.unscaledTime < ignoreMouseUntilTime) return;
 
         float dx = mouse.delta.x.ReadValue() * mouseSensitivity;
         float dy = mouse.delta.y.ReadValue() * mouseSensitivity;

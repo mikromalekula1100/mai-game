@@ -136,6 +136,8 @@ MonoBehaviour:
   damage: 25
   lifetime: 5
   isPlayerBullet: 1
+  impactClip: {fileID: 8300000, guid: f14a026c70f2565d295d6e7404b11bd6, type: 3}
+  impactVolume: 0.7
 --- !u!135 &3895812811071758293
 SphereCollider:
   m_ObjectHideFlags: 0
